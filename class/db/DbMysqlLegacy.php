@@ -10,26 +10,14 @@ use http\Exception\RuntimeException;
  */
 
 /** @property resource $connection */
-class DbMysqlLegacy extends AbstractDb
+class DbMysqlLegacy extends AbstractMysql
 {
     protected function createConnection() {
-        $host     = $GLOBALS['msq_host'];
-        $db       = $GLOBALS['msq_basa'];
-        $login    = $GLOBALS['msq_login'];
-        $password = $GLOBALS['msq_pass'];
-
-        $conn = @mysql_connect($host, $login, $password, $db);
+        $conn = @mysql_connect($GLOBALS['msq_host'], $GLOBALS['msq_login'], $GLOBALS['msq_pass'], $GLOBALS['msq_basa']);
 
         if (!$conn) {
             throw new RuntimeException('Error connecting database', ErrorCodes::DB_CONNECT_ERROR);
         }
-
-        $charset = @mysql_real_escape_string($GLOBALS['msq_charset'], $conn);
-
-        @mysql_query('SET NAMES ' . $charset, $conn);
-        @mysql_query('SET @@local.character_set_client=' . $charset, $conn);
-        @mysql_query('SET @@local.character_set_results=' . $charset, $conn);
-        @mysql_query('SET @@local.character_set_connection=' . $charset, $conn);
 
         return $conn;
     }
@@ -55,8 +43,12 @@ class DbMysqlLegacy extends AbstractDb
                 throw new RuntimeException('Unsupported parameter type', ErrorCodes::DB_PARAMS_ERROR);
             }
         }
+        $result = @mysql_query($sql, $this->connection);
+        if (@mysql_errno()) {
+            throw new RuntimeException(@mysql_error(), ErrorCodes::DB_QUERY_ERROR);
+        }
 
-        return @mysql_query($sql, $this->connection);
+        return $result;
     }
 
     /**
@@ -89,5 +81,28 @@ class DbMysqlLegacy extends AbstractDb
             default:
                 throw new RuntimeException('Wrong fetch type', ErrorCodes::DB_FETCH_ERROR);
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function insertId() {
+        return mysql_insert_id($this->connection);
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    public function escape($string) {
+        return mysql_real_escape_string($string, $this->connection);
+    }
+
+    /**
+     * @param $result
+     * @return void
+     */
+    public function release($result) {
+        @mysql_free_result($result);
     }
 }

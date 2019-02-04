@@ -6,27 +6,16 @@ use exceptions\ErrorCodes;
 use RuntimeException;
 
 /** @property \PDO $connection */
-class DbMysqlPdo extends AbstractDb
+class DbMysqlPdo extends AbstractMysql
 {
     protected function createConnection() {
-        $host     = $GLOBALS['msq_host'];
-        $db       = $GLOBALS['msq_basa'];
-        $login    = $GLOBALS['msq_login'];
-        $password = $GLOBALS['msq_pass'];
-
-        $dns = 'mysql:host=' . $host . ';dbname=' . $db;
+        $dns = 'mysql:host=' . $GLOBALS['msq_host'] . ';dbname=' . $GLOBALS['msq_basa'];
 
         try {
-            $conn = new \PDO($dns, $login, $password);
+            $conn = new \PDO($dns, $GLOBALS['msq_login'], $GLOBALS['msq_pass']);
         } catch (\PDOException $e) {
             throw new RuntimeException('Error connecting database', ErrorCodes::DB_CONNECT_ERROR);
         }
-        $charset = $conn->quote($GLOBALS['msq_charset']);
-
-        $conn->exec('SET NAMES ' . $charset);
-        $conn->exec('SET @@local . character_set_client = ' . $charset);
-        $conn->exec('SET @@local . character_set_results = ' . $charset);
-        $conn->exec('SET @@local . character_set_connection = ' . $charset);
 
         return $conn;
     }
@@ -39,6 +28,11 @@ class DbMysqlPdo extends AbstractDb
     public function query($sql, $params = array()) {
         $stmt = $this->connection->prepare($sql);
         $stmt->execute($params);
+
+        if ($stmt->errorCode() !== '00000') {
+            $error = $stmt->errorInfo();
+            throw new RuntimeException($error[1] . ':' . $error[2], ErrorCodes::DB_QUERY_ERROR);
+        }
 
         return $stmt;
     }
@@ -73,5 +67,28 @@ class DbMysqlPdo extends AbstractDb
             default:
                 throw new RuntimeException('Wrong fetch type', ErrorCodes::DB_FETCH_ERROR);
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function insertId() {
+        return (int)$this->connection->lastInsertId();
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    public function escape($string) {
+        return $this->connection->quote($string);
+    }
+
+    /**
+     * @param \PDOStatement $result
+     * @return void
+     */
+    public function release($result) {
+        $result->closeCursor();
     }
 }

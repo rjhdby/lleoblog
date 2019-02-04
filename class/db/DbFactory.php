@@ -12,6 +12,7 @@ class DbFactory
     /**
      * @param array $order
      * @return AbstractDb
+     * @throws RuntimeException
      */
     public static function getDb($order = array('pdo', 'mysqli', 'mysql')) {
         if (self::$db !== null) {

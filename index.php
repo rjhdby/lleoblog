@@ -10,20 +10,17 @@ $d=$_SERVER["REQUEST_URI"]; if(($i=strpos($d,'?'))!==false) $d=substr($d,0,$i); 
 
 include "config.php";
 
-//spl_autoload_register(
-//    function ($class) {
-//        foreach ([ROOT, __DIR__] as $root) {
-//            $class = str_replace('\\', '/', $class);
-//            $file  = $root . '/class/' . $class . '.php';
-//            if (is_file($file)) {
-//                /** @noinspection PhpIncludeInspection */
-//                include_once $file;
-//
-//                return;
-//            }
-//        }
-//    }
-//);
+spl_autoload_register(
+    function ($class) {
+        $class = str_replace('\\', '/', $class);
+        $file  = $GLOBALS['filehost'] . 'class/' . $class . '.php';
+        if (is_file($file)) {
+            include_once $file;
+
+            return;
+        }
+    }
+);
 
 $_SCRIPT=array(0=>"var page_onstart=[];");
 $_SCRIPT_ADD=$_STYLE=$_HEADD=array();

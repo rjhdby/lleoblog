@@ -6,26 +6,14 @@ use exceptions\ErrorCodes;
 use http\Exception\RuntimeException;
 
 /** @property \mysqli $connection */
-class DbMysqli extends AbstractDb
+class DbMysqli extends AbstractMysql
 {
     protected function createConnection() {
-        $host     = $GLOBALS['msq_host'];
-        $db       = $GLOBALS['msq_basa'];
-        $login    = $GLOBALS['msq_login'];
-        $password = $GLOBALS['msq_pass'];
-
-        $conn = new \mysqli($host, $login, $password, $db);
+        $conn = new \mysqli($GLOBALS['msq_host'], $GLOBALS['msq_login'], $GLOBALS['msq_pass'], $GLOBALS['msq_basa']);
 
         if (mysqli_connect_error()) {
             throw new RuntimeException('Error connecting database', ErrorCodes::DB_CONNECT_ERROR);
         }
-
-        $charset = $conn->real_escape_string($GLOBALS['msq_charset']);
-
-        $conn->query('SET NAMES ' . $charset);
-        $conn->query('SET @@local.character_set_client=' . $charset);
-        $conn->query('SET @@local.character_set_results=' . $charset);
-        $conn->query('SET @@local.character_set_connection=' . $charset);
 
         return $conn;
     }
@@ -60,6 +48,9 @@ class DbMysqli extends AbstractDb
             call_user_func_array('mysqli_stmt_bind_param', $substitution);
         }
         $stmt->execute();
+        if ($this->connection->errno) {
+            throw new RuntimeException($this->connection->error, ErrorCodes::DB_QUERY_ERROR);
+        }
 
         return $stmt->get_result();
     }
@@ -72,12 +63,16 @@ class DbMysqli extends AbstractDb
     public function fetch($result, $fetchType = self::FETCH_ASSOC) {
         switch ($fetchType) {
             case self::FETCH_ASSOC:
-                return $result->fetch_assoc();
+                $out = $result->fetch_assoc();
+                break;
             case self::FETCH_NUM:
-                return $result->fetch_row();
+                $out = $result->fetch_row();
+                break;
             default:
                 throw new RuntimeException('Wrong fetch type', ErrorCodes::DB_FETCH_ERROR);
         }
+
+        return $out === null ? false : $out;
     }
 
     /**
@@ -94,5 +89,28 @@ class DbMysqli extends AbstractDb
             default:
                 throw new RuntimeException('Wrong fetch type', ErrorCodes::DB_FETCH_ERROR);
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function insertId() {
+        return $this->connection->insert_id;
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    public function escape($string) {
+        return $this->connection->real_escape_string($string);
+    }
+
+    /**
+     * @param \mysqli_result $result
+     * @return void
+     */
+    public function release($result) {
+        $result->free();
     }
 }

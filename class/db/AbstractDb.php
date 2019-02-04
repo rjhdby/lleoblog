@@ -14,6 +14,7 @@ abstract class AbstractDb
     public static function getInstance() {
         if (static::$instance === null) {
             static::$instance = new static();
+            static::$instance->init();
         }
 
         return static::$instance;
@@ -26,6 +27,8 @@ abstract class AbstractDb
     }
 
     abstract protected function createConnection();
+
+    abstract protected function init();
 
     /**
      * @param string $sql
@@ -53,5 +56,53 @@ abstract class AbstractDb
      */
     abstract public function fetch($result, $fetchType = self::FETCH_ASSOC);
 
+    /**
+     * @param $result
+     * @param int $fetchType
+     * @return array
+     */
     abstract public function fetchAll($result, $fetchType = self::FETCH_ASSOC);
+
+    /**
+     * @param $result
+     * @return mixed
+     */
+    abstract public function fetchSingleValue($result);
+
+    /**
+     * @return int
+     */
+    abstract public function insertId();
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    abstract public function escape($string);
+
+    /**
+     * @param string $table
+     * @return bool
+     */
+    abstract public function isTableExists($table);
+
+    /**
+     * @param string $table
+     * @param string $field
+     * @return bool|string
+     */
+    abstract public function isFieldExists($table, $field);
+
+    /**
+     * @param string $table
+     * @param string $field
+     * @return bool
+     */
+    abstract public function isIndexExists($table, $field);
+
+    /**
+     * @param $result
+     * @return void
+     */
+    abstract public function release($result);
 }
