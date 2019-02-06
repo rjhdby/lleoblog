@@ -42,7 +42,7 @@ function ms_connect() { if(isset($GLOBALS['ms_connected'])) return;
 
 $GLOBALS['ms_connected']=(function_exists('mysqli_connect') ?
     @mysqli_connect($GLOBALS['msq_host'], $GLOBALS['msq_login'], $GLOBALS['msq_pass'],$GLOBALS['msq_basa'])
-    :@mysqli_connect($GLOBALS['msq_host'], $GLOBALS['msq_login'], $GLOBALS['msq_pass'])
+    :@mysql_connect($GLOBALS['msq_host'], $GLOBALS['msq_login'], $GLOBALS['msq_pass'])
 );
 
     if(!$GLOBALS['ms_connected']) {
@@ -125,7 +125,7 @@ function msq_add_update($tb,$ara,$u='id') {
 }
 
 function msq_del($tb,$ara,$u='') {
-	$a=''; foreach($ara as $n=>$m) $a.="`$n`='$m',"; $a=trim($a,',');
+	$a=''; foreach($ara as $n=>$m) $a.="`$n`='$m' AND "; $a=substr($a,0,-5);
 	$s="DELETE FROM $tb WHERE $a $u";
 	return msq($s);
 }
