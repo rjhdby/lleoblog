@@ -39,7 +39,17 @@ $GLOBALS['msq_basa']    = 'dnevnik';
 $GLOBALS['msq_charset'] = 'cp1251';
 $GLOBALS['acn']         = 1;
 
-/* Stub for _authorize.php:ANDC() */
+date_default_timezone_set('Europe/Moscow');
+
+/* Stubs */
 function ANDC(){
     return " AND `acn`='".$GLOBALS['acn']."'";
+}
+
+function logi($str){
+    return false;
+}
+
+function idie(){
+    die('Error');
 }

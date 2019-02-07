@@ -101,11 +101,11 @@ function msq_update($tb,$ara,$u='') {
 
 function msq_add_update($tb,$ara,$u='id') {
 	if(!stristr($u,'WHERE ')) { $keys=explode(' ',$u);
-		$u=array(); foreach($keys as $k) { if($k=='ANDC') break; $u[]="`".e($k)."`='".e($ara[$k])."'"; }
+		$u=array(); foreach($keys as $k) { if($k=='ANDC') break; $u[]='`'.e($k)."`='".e($ara[ $k]). "'"; }
 		$u="WHERE ".implode(' AND ',$u).($k=='ANDC'?ANDC():'');
 	}
 	if(!msq_exist($tb,$u)) $s=msq_add($tb,$ara);
-	else { if(sizeof($keys)) { foreach($keys as $k) unset($ara[$k]); } $s=msq_update($tb,$ara,$u); }
+	else { if(isset($keys)) { foreach($keys as $k) unset($ara[$k]); } $s=msq_update($tb,$ara,$u); }
 	return $s;
 }
 
