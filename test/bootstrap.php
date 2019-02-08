@@ -25,12 +25,14 @@ set_exception_handler(
     }
 );
 
-register_shutdown_function(function () {
+function shutdown() {
     $error = error_get_last();
     if ($error !== null) {
         var_dump($error);
     }
-});
+}
+
+register_shutdown_function('shutdown');
 
 $GLOBALS['msq_host']    = '127.0.0.1';
 $GLOBALS['msq_login']   = 'root';
