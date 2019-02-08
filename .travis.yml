@@ -14,4 +14,4 @@ services:
 before_install:
   mysql -e "CREATE DATABASE IF NOT EXISTS dnevnik"
 
-script: phpunit --testdox --configuration ./test/phpunit.xml.dist ./test
+script: phpunit --testdox --configuration ./test/phpunit.xml.dist ./test/Test_msq.php
