@@ -4,19 +4,19 @@
  * Date: 05.02.2019
  */
 
-spl_autoload_register(
-    function ($class) {
-        foreach (array('../class/', './') as $path) {
-            $class = str_replace('\\', '/', $class);
-            $file  = $path . $class . '.php';
-            if (is_file($file)) {
-                include_once $file;
+function autoloader($class) {
+    foreach (array('../class/', './') as $path) {
+        $class = str_replace('\\', '/', $class);
+        $file  = $path . $class . '.php';
+        if (is_file($file)) {
+            include_once $file;
 
-                return;
-            }
+            return;
         }
     }
-);
+}
+
+spl_autoload_register('autoloader');
 
 set_exception_handler(
     function ($e) {
@@ -42,14 +42,14 @@ $GLOBALS['acn']         = 1;
 date_default_timezone_set('Europe/Moscow');
 
 /* Stubs */
-function ANDC(){
-    return " AND `acn`='".$GLOBALS['acn']."'";
+function ANDC() {
+    return " AND `acn`='" . $GLOBALS['acn'] . "'";
 }
 
-function logi($str){
+function logi($str) {
     return false;
 }
 
-function idie(){
+function idie() {
     die('Error');
 }
