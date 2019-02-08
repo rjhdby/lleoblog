@@ -20,6 +20,7 @@ include_once '../include_sys/_msq.php';
  * get_dbuserdata
  *
  */
+
 class Test_msq extends PHPUnit_Framework_TestCase
 {
     /** @var TableTest $t */
@@ -27,6 +28,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     public function __construct() {
         $this->t = new TableTest();
+        ms('CREATE TABLE IF NOT EXISTS test (id int NOT NULL AUTO_INCREMENT, text varchar(45), acn int, PRIMARY KEY (id), KEY value_idx (acn))');
     }
 
     public function testConnect() {
@@ -105,7 +107,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     // $u contains ANDC
     public function test_msq_add_update_u_ANDC() {
         $id = ms("SELECT MAX({$this->t->id}) FROM {$this->t->table}", '_l', 0);
-        msq_add_update($this->t->table, array($this->t->text => 'test22', $this->t->id => $id, $this->t->value => 1), $this->t->id.' ANDC');
+        msq_add_update($this->t->table, array($this->t->text => 'test22', $this->t->id => $id, $this->t->value => 1), $this->t->id . ' ANDC');
         $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
         $this->assertEquals(2, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
     }
