@@ -4,6 +4,8 @@ matrix:
   include:
     - php: 5.2
       dist: precise
+    - php: 5.3
+      dist: precise
 
 php:
   - '5.2'
@@ -14,4 +16,4 @@ services:
 before_install:
   mysql -e "CREATE DATABASE IF NOT EXISTS dnevnik"
 
-script: phpunit --configuration ./test/phpunit.xml.dist ./test/Test_msq.php
+script: phpunit --debug --configuration ./test/phpunit.xml.dist ./test/Test_msq.php
