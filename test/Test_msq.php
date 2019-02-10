@@ -28,7 +28,6 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     public function __construct() {
         $this->t = new TableTest();
-        ms('CREATE TABLE IF NOT EXISTS test (id int NOT NULL AUTO_INCREMENT, text varchar(45), acn int, PRIMARY KEY (id), KEY value_idx (acn))');
     }
 
     public function testConnect() {
@@ -163,5 +162,6 @@ class Test_msq extends PHPUnit_Framework_TestCase
         msq_add($this->t->table, array($this->t->text => 'test1'));
         $result = msq_add($this->t->table, array($this->t->text => 'test2', $this->t->value => 1));
         $this->assertTrue($result !== false);
+        var_dump(ms("SELECT * FROM {$this->t->table}", "_a", 0));
     }
 }
