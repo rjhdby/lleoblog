@@ -33,7 +33,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     public function testConnect() {
         $this->assertNotNull($GLOBALS['ms_connected']);
-        $this->assertNotFalse($GLOBALS['ms_connected']);
+        $this->assertTrue($GLOBALS['ms_connected'] !== false);
     }
 
     public function test_msq_exists_msq_add() {
@@ -50,7 +50,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     public function test_msq_add1() {
         $result = msq_add1($this->t->table, array($this->t->text => "'test4'"));
-        $this->assertNotFalse($result);
+        $this->assertTrue($result !== false);
         $result = msq_add1($this->t->table, array($this->t->text => 'test5'));
         $this->assertFalse($result);
         $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test4'"));
@@ -161,6 +161,6 @@ class Test_msq extends PHPUnit_Framework_TestCase
         msq("DELETE FROM {$this->t->table}");
         msq_add($this->t->table, array($this->t->text => 'test1'));
         $result = msq_add($this->t->table, array($this->t->text => 'test2', $this->t->value => 1));
-        $this->assertNotFalse($result);
+        $this->assertTrue($result !== false);
     }
 }
