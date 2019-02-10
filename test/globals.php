@@ -1,4 +1,4 @@
 <?php
-define('ROOT', str_replace('\\', '/', __DIR__) . '/..');
+define('ROOT', preg_replace("%(.*)lleoblog/.*%", "$1lleoblog/", getcwd()));
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-$_SERVER['HTTP_HOST'] = 'localhost';
+$_SERVER['HTTP_HOST']   = 'localhost';

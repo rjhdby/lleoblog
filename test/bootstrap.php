@@ -6,7 +6,7 @@
 
 function autoloader($class)
 {
-    foreach (array(ROOT.'/class/', __DIR__) as $path) {
+    foreach (array(ROOT.'/class/', ROOT.'/test/') as $path) {
         $class = str_replace('\\', '/', $class);
         $file  = $path . $class . '.php';
         echo 'Trying '.$file.PHP_EOL;
