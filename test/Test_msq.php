@@ -1,8 +1,8 @@
 <?php
 include_once 'globals.php';
-include_once '../config.php.tmpl';
+include_once './../config.php.tmpl';
 include_once 'bootstrap.php';
-include_once '../include_sys/_msq.php';
+include_once './../include_sys/_msq.php';
 
 /*
  * Test suites for _msq.php
