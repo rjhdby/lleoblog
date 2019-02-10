@@ -4,7 +4,8 @@
  * Date: 05.02.2019
  */
 
-function autoloader($class) {
+function autoloader($class)
+{
     foreach (array('../class/', './') as $path) {
         $class = str_replace('\\', '/', $class);
         $file  = $path . $class . '.php';
@@ -18,14 +19,16 @@ function autoloader($class) {
 
 spl_autoload_register('autoloader');
 
-set_exception_handler(
-    function ($e) {
-        /** @var  Exception $e */
-        var_dump($e->getTraceAsString());
-    }
-);
+function exception_handler($e)
+{
+    /** @var  Exception $e */
+    var_dump($e->getTraceAsString());
+}
 
-function shutdown() {
+set_exception_handler('exception_handler');
+
+function shutdown()
+{
     $error = error_get_last();
     if ($error !== null) {
         var_dump($error);
@@ -44,14 +47,17 @@ $GLOBALS['acn']         = 1;
 date_default_timezone_set('Europe/Moscow');
 
 /* Stubs */
-function ANDC() {
+function ANDC()
+{
     return " AND `acn`='" . $GLOBALS['acn'] . "'";
 }
 
-function logi($str) {
+function logi($str)
+{
     return false;
 }
 
-function idie() {
+function idie()
+{
     die('Error');
 }
