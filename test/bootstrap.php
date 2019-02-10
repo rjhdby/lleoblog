@@ -6,9 +6,10 @@
 
 function autoloader($class)
 {
-    foreach (array('../class/', './') as $path) {
+    foreach (array(ROOT.'/class/', __DIR__) as $path) {
         $class = str_replace('\\', '/', $class);
         $file  = $path . $class . '.php';
+        echo 'Trying '.$file.PHP_EOL;
         if (is_file($file)) {
             include_once $file;
 
