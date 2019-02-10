@@ -38,9 +38,9 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     // msq_add tested by $this->prepareData()
     public function test_msq_exists_msq_add() {
-        $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test1'"));
-        $this->assertEquals(2, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
-        $this->assertEquals(0, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test5'"));
+        $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test1'"));
+        $this->assertEquals(2, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
+        $this->assertEquals(0, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test5'"));
     }
 
     public function test_msq_id() {
@@ -86,12 +86,12 @@ class Test_msq extends PHPUnit_Framework_TestCase
     // $u contains 'WHERE '
     public function test_msq_add_update_u_where() {
         msq_add_update($this->t->table, array($this->t->text => 'test22', $this->t->value => 2), "WHERE {$this->t->text}='test2'");
-        $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
-        $this->assertEquals(2, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
+        $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
+        $this->assertEquals(2, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
 
         msq_add_update($this->t->table, array($this->t->text => 'test33', $this->t->value => 2), "WHERE {$this->t->text}='test3'");
-        $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test33'"));
-        $this->assertEquals(3, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
+        $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test33'"));
+        $this->assertEquals(3, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
     }
 
     // If using default $u then $arr MUST contains 'id' key
@@ -99,9 +99,9 @@ class Test_msq extends PHPUnit_Framework_TestCase
     // $u contains keys
     public function test_msq_add_update_u_keys() {
         msq_add_update($this->t->table, array($this->t->text => 'test2', $this->t->value => 10), $this->t->text);
-        $this->assertEquals(10, ms("SELECT {$this->t->value} FROM {$this->t->table} WHERE {$this->t->text} = 'test2'", '_l', 0));
+        $this->assertEquals(10, (int)ms("SELECT {$this->t->value} FROM {$this->t->table} WHERE {$this->t->text} = 'test2'", '_l', 0));
         msq_add_update($this->t->table, array($this->t->text => 'test3', $this->t->value => 10), $this->t->text);
-        $this->assertEquals(3, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
+        $this->assertEquals(3, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
     }
 
     // If using $u with ANDC then $u MUST contains at least two keys
@@ -109,8 +109,8 @@ class Test_msq extends PHPUnit_Framework_TestCase
     public function test_msq_add_update_u_ANDC() {
         $id = ms("SELECT MAX({$this->t->id}) FROM {$this->t->table}", '_l', 0);
         msq_add_update($this->t->table, array($this->t->text => 'test22', $this->t->id => $id, $this->t->value => 1), $this->t->id . ' ANDC');
-        $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
-        $this->assertEquals(2, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
+        $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
+        $this->assertEquals(2, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
     }
 
     public function test_msq_table() {
@@ -144,12 +144,12 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     public function test_ms() {
         $result = ms("SELECT * FROM {$this->t->table}", '_1', 0);
-        $this->assertEquals(count($result), 3);
-        $this->assertEquals(array_keys($result), array($this->t->id, $this->t->text, $this->t->value));
+        $this->assertEquals(3, count($result));
+        $this->assertEquals(array($this->t->id, $this->t->text, $this->t->value), array_keys($result));
 
         $result = ms("SELECT * FROM {$this->t->table}", '_a', 0);
-        $this->assertEquals(count($result), 2);
-        $this->assertEquals(array_keys($result), array(0, 1));
+        $this->assertEquals(2, count($result));
+        $this->assertEquals(array(0, 1), array_keys($result));
 
         $result = ms("SELECT {$this->t->text}, {$this->t->value} FROM {$this->t->table} ORDER BY {$this->t->text}", '_l', 0);
         $this->assertEquals('test1', $result);
