@@ -1,8 +1,8 @@
 <?php
 include_once 'globals.php';
-include_once ROOT.'/config.php.tmpl';
+include_once ROOT . '/config.php.tmpl';
 include_once 'bootstrap.php';
-include_once ROOT.'/include_sys/_msq.php';
+include_once ROOT . '/include_sys/_msq.php';
 
 /*
  * Test suites for _msq.php
@@ -36,6 +36,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
         $this->assertTrue($GLOBALS['ms_connected'] !== false);
     }
 
+    // msq_add tested by $this->prepareData()
     public function test_msq_exists_msq_add() {
         $this->assertEquals(1, msq_exist($this->t->table, "WHERE {$this->t->text} = 'test1'"));
         $this->assertEquals(2, msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
