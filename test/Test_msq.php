@@ -33,6 +33,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     public function testConnect() {
         $this->assertNotNull($GLOBALS['ms_connected']);
         $this->assertTrue($GLOBALS['ms_connected'] !== false);
+        var_dump($GLOBALS['ms_connected']);
     }
 
     // msq_add tested by $this->prepareData()
@@ -162,6 +163,5 @@ class Test_msq extends PHPUnit_Framework_TestCase
         msq_add($this->t->table, array($this->t->text => 'test1'));
         $result = msq_add($this->t->table, array($this->t->text => 'test2', $this->t->value => 1));
         $this->assertTrue($result !== false);
-        var_dump(ms("SELECT * FROM {$this->t->table}", "_a", 0));
     }
 }
