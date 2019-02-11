@@ -1,7 +1,7 @@
 <?php
-if (!class_exists('\PHPUnit\Framework\TestCase') &&
-    class_exists('\PHPUnit_Framework_TestCase')) {
-    class_alias('\PHPUnit_Framework_TestCase', 'PHPUnit\Framework\TestCase');
+if (class_exists('\PHPUnit\Framework\TestCase') &&
+    !class_exists('\PHPUnit_Framework_TestCase')) {
+    class_alias('PHPUnit\Framework\TestCase', 'PHPUnit_Framework_TestCase');
 }
 include_once 'globals.php';
 include_once ROOT . '/config.php.tmpl';
@@ -25,7 +25,7 @@ include_once ROOT . '/include_sys/_msq.php';
  *
  */
 
-class Test_msq extends PHPUnit\Framework\TestCase
+class Test_msq extends PHPUnit_Framework_TestCase
 {
     /** @var TableTest $t */
     private $t;
