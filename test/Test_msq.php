@@ -35,7 +35,7 @@ class Test_msq extends TestCase
     public function testConnect() {
         $this->assertNotNull($GLOBALS['ms_connected']);
         $this->assertTrue($GLOBALS['ms_connected'] !== false);
-        var_dump($GLOBALS['ms_connected']);
+//        var_dump($GLOBALS['ms_connected']);
     }
 
     // msq_add tested by $this->prepareData()

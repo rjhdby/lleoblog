@@ -11,19 +11,20 @@ function set_ttl() { global $admin,$ttl,$jaajax,$MYPAGE,$MYPAGE_MD5;
 	} else if(!isset($ttl)) $ttl=60;
 } set_ttl();
 
-function my_fetch_all($data){
+function my_fetch_all($data) {
     $out = array();
-    if(is_object($GLOBALS['ms_connected']) && $GLOBALS['ms_connected'] instanceof \mysqli){
+    if (is_object($GLOBALS['ms_connected']) && $GLOBALS['ms_connected'] instanceof \mysqli) {
         $version = explode('.', phpversion());
         /** @var mysqli_result $data */
-        if((int)$version[0] === 5 && (int)$version[0]<3){
-            while($row = $data->fetch_assoc()) $out[]=$row;
-        }else{
-            $out = $data->fetch_all(MYSQLI_ASSOC);
+        if ((int)$version[0] === 5 && (int)$version[0] < 3) {
+            while ($row = $data->fetch_row()) $out[] = $row;
+        } else {
+            $out = $data->fetch_all(MYSQLI_NUM);
         }
-    }else{
-        while($row = mysql_fetch_assoc($data)) $out[]=$row;
+    } else {
+        while ($row = mysql_fetch_assoc($data)) $out[] = $row;
     }
+
     return $out;
 }
 
