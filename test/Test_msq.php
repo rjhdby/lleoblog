@@ -31,6 +31,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     private $t;
 
     public function testConnect() {
+        $this->prepareData();
         $this->assertNotNull($GLOBALS['ms_connected']);
         $this->assertTrue($GLOBALS['ms_connected'] !== false);
 //        var_dump($GLOBALS['ms_connected']);
@@ -38,18 +39,21 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     // msq_add tested by $this->prepareData()
     public function test_msq_exists_msq_add() {
+        $this->prepareData();
         $this->assertEquals(0, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test5'"));
         $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test1'"));
         $this->assertEquals(2, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
     }
 
     public function test_msq_id() {
+        $this->prepareData();
         $id     = msq_id();
         $result = ms("SELECT MAX({$this->t->id}) FROM {$this->t->table}", '_l', 0);
         $this->assertEquals($id, $result);
     }
 
     public function test_msq_add1() {
+        $this->prepareData();
         $result = msq_add1($this->t->table, array($this->t->text => "'test4'"));
         $this->assertTrue($result !== false);
         $result = msq_add1($this->t->table, array($this->t->text => 'test5'));
@@ -59,6 +63,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     }
 
     public function test_msq_del() {
+        $this->prepareData();
         $id = ms("SELECT {$this->t->id} FROM {$this->t->table} WHERE {$this->t->text}='test1'", '_l', 0);
         msq_del($this->t->table, array($this->t->id => $id, $this->t->text => 'test1'));
         msq_del($this->t->table, array($this->t->text => 'test2'), "AND {$this->t->id} > 0");
@@ -67,16 +72,19 @@ class Test_msq extends PHPUnit_Framework_TestCase
     }
 
     public function test_e() {
+        $this->prepareData();
         $str = chr(10) . chr(0) . chr(13) . chr(26) . chr(34) . chr(39);
         $this->assertEquals('\n\0\r\Z\"\\\'', e($str));
     }
 
     public function test_arae() {
+        $this->prepareData();
         $result = arae(array(chr(10) => chr(0), chr(13) => chr(26), chr(34) => chr(39)));
         $this->assertEquals(array('\n' => '\0', '\r' => '\Z', '\"' => "\'"), $result);
     }
 
     public function test_msq_update() {
+        $this->prepareData();
         msq_update($this->t->table, array($this->t->text => 'test22', $this->t->value => 2), "WHERE {$this->t->text}='test2'");
         $text = ms("SELECT {$this->t->text} FROM {$this->t->table} WHERE {$this->t->value} = 2", '_l', 0);
         $this->assertEquals('test22', $text);
@@ -85,6 +93,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     // Eternal pain
     // $u contains 'WHERE '
     public function test_msq_add_update_u_where() {
+        $this->prepareData();
         msq_add_update($this->t->table, array($this->t->text => 'test22', $this->t->value => 2), "WHERE {$this->t->text}='test2'");
         $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
         $this->assertEquals(2, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
@@ -98,6 +107,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     // If using $u with keys, all those keys MUST be in $arr
     // $u contains keys
     public function test_msq_add_update_u_keys() {
+        $this->prepareData();
         msq_add_update($this->t->table, array($this->t->text => 'test2', $this->t->value => 10), $this->t->text);
         $this->assertEquals(10, (int)ms("SELECT {$this->t->value} FROM {$this->t->table} WHERE {$this->t->text} = 'test2'", '_l', 0));
         msq_add_update($this->t->table, array($this->t->text => 'test3', $this->t->value => 10), $this->t->text);
@@ -107,6 +117,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     // If using $u with ANDC then $u MUST contains at least two keys
     // $u contains ANDC
     public function test_msq_add_update_u_ANDC() {
+        $this->prepareData();
         $id = ms("SELECT MAX({$this->t->id}) FROM {$this->t->table}", '_l', 0);
         msq_add_update($this->t->table, array($this->t->text => 'test22', $this->t->id => $id, $this->t->value => 1), $this->t->id . ' ANDC');
         $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test22'"));
@@ -114,6 +125,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     }
 
     public function test_msq_table() {
+        $this->prepareData();
         $result = msq_table($this->t->table);
         $this->assertTrue($result);
         $result = msq_table('missed_table');
@@ -121,6 +133,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     }
 
     public function test_msq_pole() {
+        $this->prepareData();
         $result = msq_pole($this->t->table, $this->t->text);
         $this->assertEquals(mb_strtolower($result), mb_strtolower($this->t->textType));
         $result = msq_pole('missed_table', $this->t->text);
@@ -130,6 +143,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     }
 
     public function test_msq_index() {
+        $this->prepareData();
         $result = msq_index($this->t->table, $this->t->primary);
         $this->assertSame($result, 1);
         $result = msq_index($this->t->table, $this->t->index);
@@ -143,6 +157,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
     }
 
     public function test_ms() {
+        $this->prepareData();
         $result = ms("SELECT * FROM {$this->t->table}", '_1', 0);
         $this->assertEquals(3, count($result));
         $this->assertEquals(array($this->t->id, $this->t->text, $this->t->value), array_keys($result));
@@ -155,9 +170,6 @@ class Test_msq extends PHPUnit_Framework_TestCase
         $this->assertEquals('test1', $result);
     }
 
-    /**
-     * @before
-     */
     public function prepareData() {
         if ($this->t === null) {
             $this->t = new TableTest();
