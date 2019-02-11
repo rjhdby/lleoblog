@@ -1,4 +1,5 @@
 <?php
+require_once 'PHPUnit/Autoload.php';
 include_once 'globals.php';
 include_once ROOT . '/config.php.tmpl';
 include_once 'bootstrap.php';
