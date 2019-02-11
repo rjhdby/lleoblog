@@ -1,5 +1,5 @@
 <?php
-require_once 'PHPUnit/Autoload.php';
+require_once 'PHPUnit/Framework/TestCase.php';
 include_once 'globals.php';
 include_once ROOT . '/config.php.tmpl';
 include_once 'bootstrap.php';
