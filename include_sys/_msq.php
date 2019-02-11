@@ -11,6 +11,22 @@ function set_ttl() { global $admin,$ttl,$jaajax,$MYPAGE,$MYPAGE_MD5;
 	} else if(!isset($ttl)) $ttl=60;
 } set_ttl();
 
+function my_fetch_all($data){
+    $out = array();
+    if(is_object($GLOBALS['ms_connected']) && $GLOBALS['ms_connected'] instanceof \mysqli){
+        $version = explode('.', phpversion());
+        /** @var mysqli_result $data */
+        if((int)$version[0] === 5 && (int)$version[0]<3){
+            while($row = $data->fetch_assoc()) $out[]=$row;
+        }else{
+            $out = $data->fetch_all(MYSQLI_ASSOC);
+        }
+    }else{
+        while($row = mysql_fetch_assoc($data)) $out[]=$row;
+    }
+    return $out;
+}
+
 /*
 œŒÀ≈«Õ€≈ œ–»Ã≈–€
 
@@ -170,7 +186,7 @@ function ms($query,$mode='_a',$ttl=666) { $s = false; $magic='@'.$GLOBALS['blogd
 if(function_exists('mysqli_connect')) {
 	if(gettype($sql)!='object') { /*print "SQL error: ".mysqli_error($GLOBALS['ms_connected']);*/ return false; }
 	if($mode == '_1') { $s=mysqli_fetch_assoc($sql); if(empty($s)) $s=false; }
-	elseif($mode == '_l') { $s=mysqli_fetch_all($sql); if(empty($s)) $s=false; else $s=$s[0][0]; } // [0][0]
+	elseif($mode == '_l') { $s=my_fetch_all($sql); if(empty($s)) $s=false; else $s=$s[0][0]; } // [0][0]
 	else { $s=array(); while($p=mysqli_fetch_assoc($sql)) $s[]=$p; }
 	mysqli_free_result($sql);
 } else {
