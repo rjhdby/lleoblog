@@ -13,7 +13,7 @@ function set_ttl() { global $admin,$ttl,$jaajax,$MYPAGE,$MYPAGE_MD5;
 
 function my_fetch_all($data) {
     $out = array();
-    if (is_object($GLOBALS['ms_connected']) && $GLOBALS['ms_connected'] instanceof \mysqli) {
+    if (is_object($GLOBALS['ms_connected']) && trim(get_class($GLOBALS['ms_connected']),'\\') === 'mysqli') {
         $version = explode('.', phpversion());
         /** @var mysqli_result $data */
         if ((int)$version[0] === 5 && (int)$version[0] < 3) {
