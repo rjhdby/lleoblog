@@ -166,6 +166,7 @@ function ms($query,$mode='_a',$ttl=666) { $s = false; $magic='@'.$GLOBALS['blogd
 	}
 	$GLOBALS['ms_ttl']='new';
 	$sql = @msq($query);
+	var_dump($query);
     var_dump(mysqli_error($GLOBALS['ms_connected']));
 if(function_exists('mysqli_connect')) {
 	if(gettype($sql)!='object') { /*print "SQL error: ".mysqli_error($GLOBALS['ms_connected']);*/ return false; }
