@@ -77,7 +77,7 @@ May be it is a temporarry problem? Try to reload page in several seconds or minu
 function msq_id() { return (function_exists('mysqli_connect')?mysqli_insert_id($GLOBALS['ms_connected']):mysql_insert_id()); }
 
 function e($s) { return (function_exists('mysqli_connect')?@mysqli_real_escape_string($GLOBALS['ms_connected'],$s):@mysql_real_escape_string($s)); }
-function msq_exist($tb,$u) { return ms("SELECT COUNT(*) FROM $tb $u;","_l",0); }
+function msq_exist($tb,$u) { return ms("SELECT COUNT(*) FROM $tb $u","_l",0); }
 //function msqn($sql) { return mysql_num_rows($sql); }
 
 function msq_add($tb,$ara) {
@@ -166,14 +166,12 @@ function ms($query,$mode='_a',$ttl=666) { $s = false; $magic='@'.$GLOBALS['blogd
 	}
 	$GLOBALS['ms_ttl']='new';
 	$sql = @msq($query);
-	var_dump($query);
-    var_dump(mysqli_error($GLOBALS['ms_connected']));
+
 if(function_exists('mysqli_connect')) {
 	if(gettype($sql)!='object') { /*print "SQL error: ".mysqli_error($GLOBALS['ms_connected']);*/ return false; }
 	if($mode == '_1') { $s=mysqli_fetch_assoc($sql); if(empty($s)) $s=false; }
 	elseif($mode == '_l') { $s=mysqli_fetch_all($sql); if(empty($s)) $s=false; else $s=$s[0][0]; } // [0][0]
 	else { $s=array(); while($p=mysqli_fetch_assoc($sql)) $s[]=$p; }
-    var_dump(mysqli_error($GLOBALS['ms_connected']));
 	mysqli_free_result($sql);
 } else {
 	if($sql === false) { /*print "SQL error: ".msq_error();*/ return false; }

@@ -38,6 +38,7 @@ class Test_msq extends PHPUnit_Framework_TestCase
 
     // msq_add tested by $this->prepareData()
     public function test_msq_exists_msq_add() {
+        var_dump($this->t);
         $this->assertEquals(0, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test5'"));
         $this->assertEquals(1, (int)msq_exist($this->t->table, "WHERE {$this->t->text} = 'test1'"));
         $this->assertEquals(2, (int)msq_exist($this->t->table, "WHERE {$this->t->id} > 0"));
