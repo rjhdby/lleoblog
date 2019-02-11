@@ -32,10 +32,6 @@ class Test_msq extends TestCase
     /** @var TableTest $t */
     private $t;
 
-    public function __construct() {
-        $this->t = new TableTest();
-    }
-
     public function testConnect() {
         $this->assertNotNull($GLOBALS['ms_connected']);
         $this->assertTrue($GLOBALS['ms_connected'] !== false);
@@ -165,6 +161,9 @@ class Test_msq extends TestCase
      * @before
      */
     public function prepareData() {
+        if ($this->t === null) {
+            $this->t = new TableTest();
+        }
         msq("DELETE FROM {$this->t->table}");
         msq_add($this->t->table, array($this->t->text => 'test1'));
         $result = msq_add($this->t->table, array($this->t->text => 'test2', $this->t->value => 1));
