@@ -174,7 +174,6 @@ class Test_msq extends PHPUnit_Framework_TestCase
         if ($this->t === null) {
             $this->t = new TableTest();
         }
-        var_dump($this->t);
         msq("DELETE FROM {$this->t->table}");
         msq_add($this->t->table, array($this->t->text => 'test1'));
         $result = msq_add($this->t->table, array($this->t->text => 'test2', $this->t->value => 1));
