@@ -77,7 +77,7 @@ May be it is a temporarry problem? Try to reload page in several seconds or minu
 function msq_id() { return (function_exists('mysqli_connect')?mysqli_insert_id($GLOBALS['ms_connected']):mysql_insert_id()); }
 
 function e($s) { return (function_exists('mysqli_connect')?@mysqli_real_escape_string($GLOBALS['ms_connected'],$s):@mysql_real_escape_string($s)); }
-function msq_exist($tb,$u) { return ms("SELECT COUNT(*) FROM $tb $u","_l",0); }
+function msq_exist($tb,$u) { return ms("SELECT COUNT(*) FROM $tb $u;","_l",0); }
 //function msqn($sql) { return mysql_num_rows($sql); }
 
 function msq_add($tb,$ara) {
