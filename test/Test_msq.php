@@ -25,9 +25,7 @@ include_once ROOT . '/include_sys/_msq.php';
  *
  */
 
-use PHPUnit\Framework\TestCase;
-
-class Test_msq extends TestCase
+class Test_msq extends PHPUnit\Framework\TestCase
 {
     /** @var TableTest $t */
     private $t;
